@@ -4,6 +4,58 @@
  * Author: Gaurav Tomar (Original) & Assistant (fixes)
  */
 // agent.js
+// agent.js
+
+// Select UI elements
+const userInput = document.getElementById("user-input");
+const sendBtn = document.getElementById("send-btn");
+const chatWindow = document.getElementById("chat-window");
+
+// Function to call AI Pipe via your backend
+async function callAIPipe(prompt) {
+  try {
+    const response = await fetch("/api/aipipe", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt })
+    });
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error("AI Pipe fetch error:", err);
+    return { error: "Failed to fetch AI Pipe" };
+  }
+}
+
+// Add a message to the chat window
+function addMessage(text, sender = "user") {
+  const msgDiv = document.createElement("div");
+  msgDiv.className = sender === "user" ? "user-msg" : "agent-msg";
+  msgDiv.textContent = text;
+  chatWindow.appendChild(msgDiv);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+// Handle user input
+async function handleUserInput() {
+  const prompt = userInput.value.trim();
+  if (!prompt) return;
+  addMessage(prompt, "user");
+  userInput.value = "";
+
+  // Call AI Pipe and display result
+  const result = await callAIPipe(prompt);
+  addMessage(JSON.stringify(result), "agent");
+}
+
+// Event listener for button
+sendBtn.addEventListener("click", handleUserInput);
+
+// Event listener for Enter key
+userInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") handleUserInput();
+});
+
 // Require dotenv during development or for local setups
 require('dotenv').config(); 
 
