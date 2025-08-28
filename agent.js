@@ -3,6 +3,15 @@
  * v2.8.0 (Updated: AI Pipe integration + bug fixes)
  * Author: Gaurav Tomar (Original) & Assistant (fixes)
  */
+// agent.js
+// Require dotenv during development or for local setups
+require('dotenv').config(); 
+
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+if (!OPENAI_API_KEY) {
+  console.error("Error: OPENAI_API_KEY is not defined in the environment.");
+  process.exit(1);
+}
 class GyaanSetu {
     constructor() {
         this.version = '2.8.0';
